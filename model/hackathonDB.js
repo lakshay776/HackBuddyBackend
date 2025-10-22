@@ -32,9 +32,15 @@ const hackathonSchema = new mongoose.Schema({
         default:"Scaler School of Technology"
     },
     createdBy:{
-        type:String,
-
-    }
+        type:mongoose.Schema.Types.ObjectId,
+        ref:'userModel',
+        required:true
+    },
+    teams:[{
+        type:mongoose.Schema.Types.ObjectId,
+        ref:"teamModel",
+        default:[]
+    }]
 })
 const hackathonModel =  mongoose.model('hackathonModel',hackathonSchema)
 

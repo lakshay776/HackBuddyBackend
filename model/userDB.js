@@ -18,10 +18,17 @@ const userSchema = new mongoose.Schema({
     password:{
         type:String,
         required:true
+    },expertise:{
+        type:String
+        
     },
     Score:{
         type:Number,
         default:0
+    },
+    likes:{
+        count:{type:Number,default:0},
+        likedBy:[{type:mongoose.Schema.Types.ObjectId,ref:'userModel'}]
     },
     phoneNumber:{
         type:String,
@@ -54,13 +61,13 @@ const userSchema = new mongoose.Schema({
        type:String,
        default:"Student"
     },
-    notifications:{
+    notifications:[{
         teamId:{type:mongoose.Schema.Types.ObjectId, ref:'teamModel'},
         message:{type:String},
-        status:{type:String, enum:['Unread','Read'], default:'Unread'},
+        status:{type:String, enum:['Unread','Read','Declined'], default:'Unread'},
         type:{type:String, enum:['Invite','System'], default:'Invite'},
         createdAt:{type:Date, default:Date.now}
-    },
+    }],
     hackathonsRegistered:[{
     hackathon:{
         type:mongoose.Schema.Types.ObjectId,

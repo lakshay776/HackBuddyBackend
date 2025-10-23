@@ -1,4 +1,5 @@
 import { teamModel } from "../model/teamDB.js";
+import { userModel } from "../model/userDB.js";
 
 async function createTeam(req,res){
     try{
@@ -9,9 +10,16 @@ async function createTeam(req,res){
             users:req.user._id,
             role:'Team Leader'
         }];
-        
+
         const newTeam = await teamModel.create(body)
-        
+
+        // Add the team ID to the user's teams array
+        await userModel.findByIdAndUpdate(
+            req.user._id,
+            { $push: { teams: newTeam._id } },
+            { new: true }
+        );
+
         res.status(201).json({message:"created new Team", team:newTeam})
 
     }catch(error){

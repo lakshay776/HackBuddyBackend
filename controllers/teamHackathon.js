@@ -20,20 +20,29 @@ async function registerTeamForHackathon(req,res){
         hackathon.teams.push(team._id)
         team.hackathonsRegistered.push(hackathon._id)
 
-
         await hackathon.save()
+        await team.save()
 
-    //add the hackathon and the team for that as an array in the userModel in each member's data
+        console.log(`Team ${team.teamName} registered for hackathon ${hackathon.HackathonName}`)
 
-    for(const member of team.members){
+        //add the hackathon and the team for that as an array in the userModel in each member's data
+        for(const member of team.members){
             const user = await userModel.findById(member.users)
             if(user){
-                user.hackathonsRegistered.push({
-                    hackathon:hackathon._id,
-                    team:team._id
-                })
-                await user.save()
-                console.log(`Added ${user.Name} in team ${team.teamName} to hackathon ${hackathon.HackathonName}`)
+                // Check if user is already registered for this hackathon with this team
+                const alreadyRegistered = user.hackathonsRegistered.some(reg =>
+                    reg.hackathon.toString() === hackathon._id.toString() &&
+                    reg.team.toString() === team._id.toString()
+                )
+
+                if (!alreadyRegistered) {
+                    user.hackathonsRegistered.push({
+                        hackathon:hackathon._id,
+                        team:team._id
+                    })
+                    await user.save()
+                    console.log(`Added ${user.Name} in team ${team.teamName} to hackathon ${hackathon.HackathonName}`)
+                }
             }
         }
 

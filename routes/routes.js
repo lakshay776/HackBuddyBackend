@@ -1,5 +1,5 @@
 import express from 'express'
-import { Login,SignUp, fetchAllUsers,editProfile,getMyTeams, getNotifications,logout} from '../controllers/userCRUD.js'
+import { Login,SignUp, fetchAllUsers,editProfile,getMyTeams, getNotifications,logout } from '../controllers/userCRUD.js'
 import { validateUser,loginValidator } from '../middlewares/validator.js'
 import { fetchAllHackathons,createHackathon,deleteHackathon } from '../controllers/hackathonCRUD.js'
 import { isAdmin } from '../middlewares/isAdmin.js'
@@ -8,6 +8,7 @@ import { createTeam, getTeams } from '../controllers/teamCRUD.js'
 import { sendInvite } from '../controllers/sendInvite.js'
 import { respondInvite } from '../controllers/respondInvite.js'
 import { registerTeamForHackathon } from '../controllers/teamHackathon.js'
+import { likeUser } from '../controllers/likes.js'
 import { get } from 'mongoose'
 
 const router = express.Router()
@@ -20,6 +21,7 @@ router.get('/fetchAllUsers',verifyUser,fetchAllUsers)
 router.patch('/editProfile',verifyUser,editProfile)
 router.get('/getNotifications',verifyUser,getNotifications)
 router.get('/logout',verifyUser,logout)
+router.post('/likeUser',verifyUser,likeUser)
 
 //hackathon routers
 router.post('/createHackathon',verifyUser,isAdmin,createHackathon)
@@ -33,6 +35,10 @@ router.post('/sendInvite',verifyUser,sendInvite)
 router.post('/respondInvite',verifyUser,respondInvite)
 router.get('/getMyTeams',verifyUser,getMyTeams)
 
-//team to hackathon registration 
+//team to hackathon registration
 router.post('/registerTeamForHackathon',verifyUser,registerTeamForHackathon)
+
+//user likes
+router.post('/likeUser',verifyUser,likeUser)
+
 export {router}

@@ -10,12 +10,27 @@ async function respondInvite(req, res) {
         if (!team) return res.status(404).json({ error: "team not found" })
 
         // Find the invitation for this user
-        const invite = team.invitations.find(inv => inv.user.toString() === req.user._id.toString())
+        const invite = team.invitations.find(inv => inv.user?.toString() === req.user._id.toString())
         if (!invite) return res.status(400).json({ error: "no invitation found" })
 
         // Update invitation status
         invite.status = response
         await team.save()
+
+        // Update the user's notification status
+        const userNotification = req.user.notifications.find(notif =>
+            notif.teamId?.toString() === teamId.toString() &&
+            notif.type === 'Invite'
+        );
+
+        if (userNotification) {
+            if (response === 'Rejected') {
+                userNotification.status = 'Declined';
+            } else if (response === 'Accepted') {
+                userNotification.status = 'Read';
+            }
+            await req.user.save();
+        }
 
         if (response === 'Accepted') {
             // Add user to team members if not already

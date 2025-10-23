@@ -28,7 +28,7 @@ async function createHackathon(req,res){
         organizer:organizer,
         createdBy:createdBy
     })
-    res.status(201).json({message:"new hacakathon created",hacakathon:newHackathon})
+    res.status(201).json({message:"new hackathon created",hackathon:newHackathon})
 }catch(error){
     res.status(500).json({error:"internal server error",error:error})
 }

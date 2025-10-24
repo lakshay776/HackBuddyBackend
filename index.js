@@ -20,7 +20,7 @@ app.use(cookieParser())
 connectDB()
 
 
-app.use('/Hack',router)
+app.use('/',router)
 
 const port = process.env.port || 5000
 app.listen(port,()=>{
